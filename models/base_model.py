@@ -9,11 +9,23 @@ from datetime import datetime
 class BaseModel:
     """BaseModel class."""
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """Init method to BaseModel"""
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        special_args_keys = ('created_at', 'updated_at')
+
+        if len(kwargs) > 0:
+            for k, v in kwargs.items():
+                if k == '__class__':
+                    continue
+                if k in special_args_keys:
+                    format = "%Y-%m-%dT%H:%M:%S.%f"
+                    self.__setattr__(k, datetime.strptime(v, format))
+                else:
+                    self.__setattr__(k, v)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def __str__(self):
         """String representation of a BaseModel"""

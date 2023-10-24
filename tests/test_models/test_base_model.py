@@ -2,6 +2,8 @@
 
 import unittest
 import time
+import re
+import datetime
 from models.base_model import BaseModel
 
 """
@@ -54,3 +56,18 @@ class TestBaseModelClass(unittest.TestCase):
         res_dict.update(created_at=a.created_at.isoformat())
         res_dict.update(updated_at=a.updated_at.isoformat())
         self.assertEqual(res_dict, a.to_dict())
+
+    def testCheckClassAttribute(self):
+        """Checks if the __class__ attribute is not added"""
+        a = BaseModel(__class__="Rectangle")
+        self.assertNotEqual(a.__class__, "Rectangle")
+
+    def testCreatedAtKwargs(self):
+        """Check if created_at is a datetime object"""
+        a = BaseModel(created_at="2017-09-28T21:05:54.119572")
+        self.assertEqual(type(a.created_at), datetime.datetime)
+
+    def testUpdatedAtKwargs(self):
+        """Check if updated_at is a datetime object"""
+        a = BaseModel(updated_at="2017-09-28T21:05:54.119572")
+        self.assertEqual(type(a.updated_at), datetime.datetime)
