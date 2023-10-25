@@ -57,6 +57,12 @@ class TestBaseModelClass(unittest.TestCase):
         res_dict.update(updated_at=a.updated_at.isoformat())
         self.assertEqual(res_dict, a.to_dict())
 
+    def testToDictDatetimeFormat(self):
+        a = BaseModel()
+        a_dict = a.to_dict()
+        self.assertTrue(isinstance(a_dict['created_at'], str))
+        self.assertTrue(isinstance(a_dict['updated_at'], str))
+
     def testCheckClassAttribute(self):
         """Checks if the __class__ attribute is not added"""
         a = BaseModel(__class__="Rectangle")
