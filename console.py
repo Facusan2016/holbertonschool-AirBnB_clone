@@ -158,7 +158,7 @@ class HBNBCommand(cmd.Cmd):
                     objToUpdate.__setattr__(args[2], argUpdate)
                     objToUpdate.save()
 
-    def do_emptyline(self):
+    def emptyline(self):
         """Handles the empty line
         """
         pass
