@@ -102,8 +102,13 @@ class HBNBCommand(cmd.Cmd):
                     print("** no instance found **")
                 else:
                     del storage.all()[str_to_search]
+                    storage.save()
 
     def do_all(self, line):
+        """
+    Shows all objects of a class if a class name is passed
+    otherwise shows all the Objects.
+        """
         args = line.split()
         if len(args) > 0:
             if args[0] not in validObjects:
@@ -117,6 +122,41 @@ class HBNBCommand(cmd.Cmd):
         else:
             filtered_list = list(v.__str__() for v in storage.all().values())
             print(filtered_list)
+
+    def do_update(self, line):
+        """
+    Updates an instance of a class with the next sintax
+    update <class name> <id> <attribute name> "<attribute value>"
+        """
+        args = line.split()
+        if len(args) == 0:
+            print("** class name missing **")
+        else:
+            if args[0] not in validObjects:
+                print("** class doesn't exist **")
+            elif len(args) == 1:
+                print("** instance id missing **")
+            else:
+                str_to_search = args[0] + "." + args[1]
+                if str_to_search not in storage.all().keys():
+                    print("** no instance found **")
+                elif len(args) == 2:
+                    print("** attribute name missing **")
+                elif len(args) == 3:
+                    print("** value missing **")
+                else:
+                    argUpdate = args[3]
+
+                    if argUpdate.startswith('"') and argUpdate.endswith('"'):
+                        argUpdate = str(argUpdate)
+                    elif argUpdate.isalnum() and argUpdate.find('.') == -1:
+                        argUpdate = int(argUpdate)
+                    else:
+                        argUpdate = float(argUpdate)
+
+                    objToUpdate = storage.all()[str_to_search]
+                    objToUpdate.__setattr__(args[2], argUpdate)
+                    objToUpdate.save()
 
     def do_emptyline(self):
         """Handles the empty line
