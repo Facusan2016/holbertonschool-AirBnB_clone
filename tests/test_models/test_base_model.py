@@ -58,10 +58,17 @@ class TestBaseModelClass(unittest.TestCase):
         self.assertEqual(res_dict, a.to_dict())
 
     def testToDictDatetimeFormat(self):
+        """Test if the datetime convert in string."""
         a = BaseModel()
         a_dict = a.to_dict()
         self.assertTrue(isinstance(a_dict['created_at'], str))
         self.assertTrue(isinstance(a_dict['updated_at'], str))
+
+    def test_to_dict_class_name(self):
+        """Test if the dict contains the __class__ with the value BaseModel."""
+        a = BaseModel()
+        a_dict = a.to_dict()
+        self.assertEqual(a_dict['__class__'], 'BaseModel')
 
     def testCheckClassAttribute(self):
         """Checks if the __class__ attribute is not added"""
@@ -77,3 +84,10 @@ class TestBaseModelClass(unittest.TestCase):
         """Check if updated_at is a datetime object"""
         a = BaseModel(updated_at="2017-09-28T21:05:54.119572")
         self.assertEqual(type(a.updated_at), datetime.datetime)
+
+    def test_default_values(self):
+        """Test if initialized with null values"""
+        a = BaseModel()
+        self.assertIsNotNone(a.id)
+        self.assertIsNotNone(a.created_at)
+        self.assertIsNotNone(a.updated_at)
