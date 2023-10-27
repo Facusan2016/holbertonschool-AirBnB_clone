@@ -9,6 +9,14 @@ from unittest.mock import patch
 
 class TestFileStorage(unittest.TestCase):
 
+    def test_file_path_private(self):
+        """Check if the test file path is private"""
+        self.assertEqual(storage._FileStorage__file_path, 'file.json')
+
+    def test_file_path_string(self):
+        """Check if the test file path is a string"""
+        self.assertEqual(type(storage._FileStorage__file_path), str)
+
     def test_dictionary_exist(self):
         """Check if the __objects dictionary exists in FileStorage."""
         self.assertTrue(hasattr(storage, '_FileStorage__objects'))
@@ -19,6 +27,10 @@ class TestFileStorage(unittest.TestCase):
 
         key = f"{type(base_model).__name__}.{base_model.id}"
         self.assertEqual(key, f"BaseModel.{base_model.id}")
+
+    def test_all_method(self):
+        """Check if the all method returns the __objects"""
+        self.assertEqual(storage._FileStorage__objects, storage.all())
 
     def test_reload_file_existence(self):
         """"Check if reload() deserializes the file only if it exists"""
@@ -52,3 +64,11 @@ class TestFileStorage(unittest.TestCase):
         with unittest.mock.patch.object(storage, 'new') as mock_new:
             obj.__init__()
             mock_new.assert_called_once_with(obj)
+
+    def test_file_storage_init(self):
+        """Test if the storage inits correctly when models is import"""
+        storage._FileStorage__objects = {}
+        self.assertEqual(storage.all(), {})
+        from models.base_model import BaseModel
+        BaseModel()
+        self.assertNotEqual(storage.all(), {})
