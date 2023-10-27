@@ -6,4 +6,6 @@ from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    pass
+    """Define the City class."""
+    name = ""
+    state_id = ""

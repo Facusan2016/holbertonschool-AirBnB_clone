@@ -4,9 +4,14 @@ import unittest
 import os
 from models.base_model import BaseModel
 from models import storage
+from unittest.mock import patch
 
 
 class TestFileStorage(unittest.TestCase):
+
+    def test_dictionary_exist(self):
+        """Check if the __objects dictionary exists in FileStorage."""
+        self.assertTrue(hasattr(storage, '_FileStorage__objects'))
 
     def test_key_format(self):
         """Check if the key format is "classname.id"""
@@ -33,3 +38,17 @@ class TestFileStorage(unittest.TestCase):
         base_model = BaseModel()
         key = f"{type(base_model).__name__}.{base_model.id}"
         self.assertIn(key, storage.all())
+
+    def test_save_method(self):
+        """Test if save method calls save method of storage."""
+        obj = BaseModel()
+        with unittest.mock.patch.object(storage, 'save') as mock_save:
+            obj.save()
+            mock_save.assert_called_once()
+
+    def test_new_method(self):
+        """Test if new method calls new method of storage."""
+        obj = BaseModel()
+        with unittest.mock.patch.object(storage, 'new') as mock_new:
+            obj.__init__()
+            mock_new.assert_called_once_with(obj)

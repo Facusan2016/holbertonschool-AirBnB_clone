@@ -93,3 +93,17 @@ class TestBaseModelClass(unittest.TestCase):
         self.assertIsNotNone(a.id)
         self.assertIsNotNone(a.created_at)
         self.assertIsNotNone(a.updated_at)
+
+    def test_save_method(self):
+        """Test if save method calls save method of storage."""
+        obj = BaseModel()
+        with unittest.mock.patch.object(storage, 'save') as mock_save:
+            obj.save()
+            mock_save.assert_called_once()
+
+    def test_new_method(self):
+        """Test if new method calls new method of storage."""
+        obj = BaseModel()
+        with unittest.mock.patch.object(storage, 'new') as mock_new:
+            obj.__init__()
+            mock_new.assert_called_once_with(obj)
